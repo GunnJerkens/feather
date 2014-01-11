@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My New CouchApp</title>
+    <link rel="stylesheet" href="style/main.css" type="text/css">
+  </head>
+  <body>
+    
+    <p id="login"></p>
+    
+    <div id="items">
+    </div>
+
+  </body>
+
+  <!-- Templates -->
+  <script type="text/template" id="item-view">
+    <label for="name">Name: </label><input type="text" name="name" value="{{{name}}}"/><br />
+    <input id="submit" type="submit" value="Submit"/>
+    <a id="delete">Delete</a>
+  </script>
+
+  <script type="text/javascript" src="/_utils/script/sha1.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.couchLogin.min.js"></script>
+  <script type="text/javascript" src="js/jquery.couch.js"></script>
+  <script type="text/javascript" src="js/jquery.couchLogin.min.js"></script>
+  <script type="text/javascript" src="js/jquery.serializeObject.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/backbone.js"></script>
+  <script type="text/javascript" src="js/backbone-couchdb.js"></script>
+  <script type="text/javascript" src="js/mustache.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    
+  </script>
+</html>
