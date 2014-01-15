@@ -45,7 +45,6 @@
 
     onSubmit: function(e){
       e.preventDefault();
-      console.log($(this.el).serializeObject());
       this.model.save($(this.el).serializeObject());
     },
 
