@@ -1,10 +1,10 @@
 {
   "env" : {
     "public" : {
-      "db" : "http://name:pass@mycouch.couchone.com/mydatabase"
+      "db" : "http://name:pass@db.gunnjerkens.com:5984/mydatabase"
     },
     "default" : {
-      "db" : "http://admin:xx83983E@localhost:5984/feather"
+      "db" : "http://name:pass@localhost:5984/mydatabase"
     }
   }
 }
