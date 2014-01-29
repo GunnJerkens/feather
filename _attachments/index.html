@@ -1,37 +1,69 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My New CouchApp</title>
-    <link rel="stylesheet" href="style/main.css" type="text/css">
+    <title>Feather - A Super-Light CMS</title>
+    <link rel="stylesheet" href="style/screen.css" type="text/css">
   </head>
   <body>
     
-    <p id="login"></p>
-    
-    <div id="items">
-    </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Feather</a>
+        </div>
+        <div class="navbar-collapse collapse" id="login"></div>
+      </div>
+    </nav>
+
+    <div class="container" id="content"></div>
 
   </body>
 
-  <!-- Templates -->
-  <script type="text/template" id="item-view">
-    <label for="name">Name: </label><input type="text" name="name" value="{{{name}}}"/><br />
-    <input id="submit" type="submit" value="Submit"/>
-    <a id="delete">Delete</a>
+  <script type="text/template" id="anon-template">
+    <div class="jumbotron">FEATHER</div>
   </script>
 
-  <script type="text/javascript" src="/_utils/script/sha1.js"></script>
-  <script type="text/javascript" src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/jquery.couchLogin.min.js"></script>
-  <script type="text/javascript" src="js/jquery.couch.js"></script>
-  <script type="text/javascript" src="js/jquery.couchLogin.min.js"></script>
-  <script type="text/javascript" src="js/jquery.serializeObject.js"></script>
-  <script type="text/javascript" src="js/underscore.js"></script>
-  <script type="text/javascript" src="js/backbone.js"></script>
-  <script type="text/javascript" src="js/backbone-couchdb.js"></script>
-  <script type="text/javascript" src="js/mustache.js"></script>
-  <script type="text/javascript" src="js/app.js"></script>
-  <script type="text/javascript" charset="utf-8">
-    
+  <script type="text/template" id="type-template">
+    <a href="#/{{name}}">{{name}}</a>
+    <div class="input-group input-group-lg">
+    <input type="text" class="form-control" name="name" placeholder="{{name}}"/>
+      {{#fields}}
+        <div class="input-group fields">
+          <select name="fields" class="form-control" selected="{{type}}">
+            <option value="text">Text</option>
+            <option value="checkbox">Checkbox</option>
+          </select>
+          <a href="#" class="removeField"><span class="glyphicon glyphicon-remove"></span> </a>
+          <br />
+        </div>
+      {{/fields}}
+      <a class="addField" href="#">Add Field</a>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+    <button class="edit btn btn-default"><span class="glyphicon glyphicon-thumbs-down"></span> Edit</button>
+    <button class=" delete btn btn-danger"><span class="glyphicon glyphicon-thumbs-down"></span> Delete</a><br />
   </script>
+
+  <script type="text/template" id="item-template">
+    {{type}}<br />
+  </script>
+
+  <script src="/_utils/script/sha1.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.migrate.js"></script>
+  <script src="js/jquery.serialize.js"></script>
+  <script src="js/jquery.couch.js"></script>
+  <script src="js/jquery.couchLogin.js"></script>
+  <script src="js/underscore.js"></script>
+  <script src="js/backbone.js"></script>
+  <script src="js/backbone-couchdb.js"></script>
+  <script src="js/mustache.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/app.js"></script>
 </html>

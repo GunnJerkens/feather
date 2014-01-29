@@ -1,37 +1,42 @@
-;(function($,_,Backbone,Mustache,window,document,undefined){
+;(function($,_,Backbone,Mustache,window,document,config,undefined){
   Backbone.couch_connector.config.db_name = "feather";
   Backbone.couch_connector.config.ddoc_name = "feather";
   Backbone.couch_connector.config.global_changes = false;
 
-  /* Item */
-  var Item = Backbone.Model.extend({
+  /* 
+   * Types
+   * 
+   */
+  var Type = Backbone.Model.extend({
     defaults: {
-      name: "Default"
+      name: "default",
+      fields: [],
+      collection: "types"
     }
   });
 
-  var ItemList = Backbone.Collection.extend({
+  var TypeList = Backbone.Collection.extend({
     db: {
-      view: "items",
-      changes: true,
-      filter: Backbone.couch_connector.config.ddoc_name + "/items"
+      view: "types",
+      changes: false,
+      filter: Backbone.couch_connector.config.ddoc_name + "/types"
     },
 
-    url: "/items",
-    model: Item,
-
-    comparator: function(item){
-      return 'name';
-    }
+    url: "/types",
+    model: Type
   });
-  var Items = new ItemList();
+  var Types = new TypeList();
 
-  var ItemListEntry = Backbone.View.extend({
+  var TypeListItemView = Backbone.View.extend({
     tagName: "form",
+    className: "form",
 
     events: {
-      "click #submit": "onSubmit",
-      "click #delete": "delete"
+      "submit": "onSubmit",
+      "click .delete": "delete",
+      "click .edit": "showForm",
+      "click .addField": "addField",
+      "click .removeField": "removeField"
     },
 
     initialize: function(){
@@ -39,51 +44,77 @@
     },
 
     render: function(){
-      $(this.el).html(Mustache.render($("#item-view").html(), this.model.toJSON()));
+      $(this.el).html(Mustache.render($("#type-template").html(), this.model.toJSON()));
       return this;
     },
 
     onSubmit: function(e){
       e.preventDefault();
-      this.model.save($(this.el).serializeObject());
+      console.log($(this.el).serializeObject());
+      this.model.save($(this.el).serializeObject(), 
+        {
+          success: function(){}
+        }
+      );
     },
 
     delete: function(){
-      this.model.destroy();
-      this.remove();
-    }
+      if (window.confirm("Are you sure you want to delete '" + this.model.get('name') +"'?")) {
+        this.model.destroy();
+        this.remove();
+      }
+    },
 
+    showForm: function(){
+
+    },
+
+    addField: function(){
+      var fields = this.model.get('fields');
+      fields.push({name:'Name',type:'Type',index: fields.length});
+      this.model.save({fields: fields});
+      this.render();
+    },
+
+    removeField: function(e){
+      var index = $(this.el).index($(e.currentTarget));
+      console.log(index);
+    }
   });
 
-  var ItemListView = Backbone.View.extend({
-    el: $("#items"),
+  var TypeListView = Backbone.View.extend({
+
+    el: $('#content'),
 
     events: {
-      "click #new-item": "addItem"
+      "click #addItem": "addItem"
     },
 
     initialize: function(){
-      Items.fetch({
-        success: function(){
-          Items.each(function(item){
-            var view = new ItemListEntry({model: item});
-            $('#item-list').prepend(view.render().el);
-          });
+      $(this.el).html('<a id="addItem" href="#">New Item</a><div class="types"></div>');
+      Types.fetch({success: function(){
+
+        if (Types.models.length > 0) {
+          for (var i in Types.models) {
+            var view = new TypeListItemView({model: Types.models[i]})
+            $('.types').append(view.render().el);
+          }
         }
-      });
+      }});
     },
 
-    addItem: function(){
-      var item = Items.create({
-        name: "Default",
-        collection: "items"
-      });
-      var view = new ItemListEntry({model: item});
-      $('#item-list').prepend(view.render().el);
+    addItem: function(e){
+      e.preventDefault();
+      type = Types.create();
+      $('.types').append(new TypeListItemView({model: type}).render().el);
     }
   });
 
-  /* User */
+
+  /* 
+   * User
+   * 
+   */
   var UserModel = Backbone.Model.extend({
     defaults : {
       name : "Anonymous"
@@ -91,13 +122,6 @@
   });
   
   window.CurrentUser = new UserModel();
-  var MessageModel = Backbone.Model.extend({
-    initialize : function(){
-      if(!this.get("date")){
-        this.set({"date": new Date().getTime()});
-      }
-    }
-  });
   
   var UserSession = Backbone.Model.extend({
   });
@@ -114,14 +138,24 @@
 
   // The App router initializes the app by calling `UserList.fetch()`
   var App = Backbone.Router.extend({
-    initialize : function(){
+    routes: {
+      "/:type"     : "listItems"
+    },
+
+    initialize: function(){
       UserList.fetch();
+
+      var types = new TypeListView();
+    },
+
+    listItems: function(){
+
     }
   });
 
   // The current session will be stored in here
   var CurrentSession = null;
-  
+
   // Booststrap app after delay to avoid continuous activity spinner 
   _.delay(function(){
     
@@ -133,14 +167,14 @@
       if(CurrentSession != null)
         CurrentSession.destroy();
     });
+
+    Backbone.history.start();
     
     // Includes the couchlogin
     // check it out here: <a href="https://github.com/couchapp/couchdb-login-jquery">https://github.com/couchapp/couchdb-login-jquery</a>
     $('#login').couchLogin({
       loggedIn : function(user){
         CurrentUser.set(user);
-        $('#items').html('<a id="new-item" href="#">New Item</a><div id="item-list"></div>');
-        var items = new ItemListView();
         // Only add a User if it's not already in the list
         if(!UserList.detect(function(user){return user.get("name") == CurrentUser.get("name");})){
           CurrentSession = UserList.create({
@@ -148,18 +182,19 @@
             "logged_in_at" : new Date().getTime()
           });
         }
+
+        // Bootstrapping
+        window.app = new App();
+        app.navigate("");
       },
       loggedOut : function(){
         CurrentUser.set(new UserModel().toJSON());
         CurrentUser.trigger("change:name");
-        if (items) items.remove();
-        if(CurrentSession != null)
-          CurrentSession.destroy();
+        if(CurrentSession != null) CurrentSession.destroy();
+        $('#content').html('');
       }
     });
-    
-    // Bootstrapping
-    new App();
 
   }, 100);
+
 }(jQuery,_,Backbone,Mustache,window,document));

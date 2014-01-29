@@ -1,7 +1,13 @@
 [
   // filenames matching these regexps will not be pushed to the database
   // uncomment to activate; separate entries with ","
-  // ".*~$"
-  // ".*\\.swp$"
-  // ".*\\.bak$"
+  ".*~$",
+  ".*\\.swp$",
+  ".*\\.bak$",
+  "node_modules",
+  "node_modules/*",
+  "_attachments/style/config.rb",
+  "_attachments/style/scss",
+  "_attachments/style/scss/*",
+  "img/src/*"
 ]

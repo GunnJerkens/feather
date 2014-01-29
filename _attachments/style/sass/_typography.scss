@@ -1,0 +1,16 @@
+body {     
+        /* Improves font rendering, fixes "chunky" fonts */
+        -webkit-font-smoothing: antialiased;
+        font-style: normal;
+        font-family: 'brandon-grotesque', sans-serif;
+        font-weight: 400;
+}
+@mixin serif {
+        font-family: 'ltc-bodoni-175', serif;
+}
+@mixin sans {
+        font-family: 'brandon-grotesque', sans-serif;
+}
+@mixin franklin {
+        font-family: 'franklin-gothic-ext-comp-urw', sans-serif;
+}
