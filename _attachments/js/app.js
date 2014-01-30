@@ -1,4 +1,4 @@
-;(function($,_,Backbone,Mustache,window,document,config,undefined){
+;(function($,_,Backbone,Handlebars,window,document,config,undefined){
   Backbone.couch_connector.config.db_name = "feather";
   Backbone.couch_connector.config.ddoc_name = "feather";
   Backbone.couch_connector.config.global_changes = false;
@@ -11,8 +11,11 @@
     defaults: {
       name: "default",
       fields: [],
+      count: function(){
+        return Items.where({'type': this.name}).length;
+      },
       collection: "types"
-    }
+    },
   });
 
   var TypeList = Backbone.Collection.extend({
@@ -28,23 +31,17 @@
   var Types = new TypeList();
 
   var TypeListItemView = Backbone.View.extend({
-    tagName: "form",
-    className: "form",
+    tagName: "div",
+    className: "type",
 
-    events: {
-      "submit": "onSubmit",
-      "click .delete": "delete",
-      "click .edit": "showForm",
-      "click .addField": "addField",
-      "click .removeField": "removeField"
-    },
+    template: Handlebars.compile($("#type-template").html()),
 
     initialize: function(){
       _.bindAll(this, "onSubmit");
     },
 
     render: function(){
-      $(this.el).html(Mustache.render($("#type-template").html(), this.model.toJSON()));
+      $(this.el).html(this.template(this.model.toJSON()));
       return this;
     },
 
@@ -65,10 +62,6 @@
       }
     },
 
-    showForm: function(){
-
-    },
-
     addField: function(){
       var fields = this.model.get('fields');
       fields.push({name:'Name',type:'Type',index: fields.length});
@@ -78,13 +71,13 @@
 
     removeField: function(e){
       var index = $(this.el).index($(e.currentTarget));
-      console.log(index);
+      var fields = this.model.get('fields');
     }
   });
 
   var TypeListView = Backbone.View.extend({
 
-    el: $('#content'),
+    el: $('#list'),
 
     events: {
       "click #addItem": "addItem"
@@ -107,6 +100,107 @@
       e.preventDefault();
       type = Types.create();
       $('.types').append(new TypeListItemView({model: type}).render().el);
+    }
+  });
+
+  /* 
+   * Items
+   * 
+   */
+  var Item = Backbone.Model.extend({
+    defaults: {
+      name: "default",
+      fields: [],
+      collection: "items"
+    }
+  });
+
+  var ItemList = Backbone.Collection.extend({
+    db: {
+      view: "items",
+      changes: false,
+      filter: Backbone.couch_connector.config.ddoc_name + "/items"
+    },
+
+    url: "/items",
+    model: Item,
+
+    count: function(){
+      
+    }
+  });
+  var Items = new ItemList();
+
+  var ItemListItemView = Backbone.View.extend({
+    tagName: "form",
+    className: "form",
+
+    template: Handlebars.compile($("#type-template").html()),
+
+    initialize: function(){
+      _.bindAll(this, "onSubmit");
+    },
+
+    render: function(){
+      $(this.el).html(this.template(this.model.toJSON()));
+      return this;
+    },
+
+    onSubmit: function(e){
+      e.preventDefault();
+      console.log($(this.el).serializeObject());
+      this.model.save($(this.el).serializeObject(), 
+        {
+          success: function(){}
+        }
+      );
+    },
+
+    delete: function(){
+      if (window.confirm("Are you sure you want to delete '" + this.model.get('name') +"'?")) {
+        this.model.destroy();
+        this.remove();
+      }
+    },
+
+    addField: function(){
+      var fields = this.model.get('fields');
+      fields.push({name:'Name',type:'Type',index: fields.length});
+      this.model.save({fields: fields});
+      this.render();
+    },
+
+    removeField: function(e){
+      var index = $(this.el).index($(e.currentTarget));
+      console.log(index);
+    }
+  });
+
+  var ItemListView = Backbone.View.extend({
+
+    el: $('#list'),
+
+    events: {
+      "click #addItem": "addItem"
+    },
+
+    initialize: function(){
+      $(this.el).html('<a id="addItem" href="#">New Item</a><div class="items"></div>');
+      Items.fetch({success: function(){
+
+        if (Items.models.length > 0) {
+          for (var i in Items.models) {
+            var view = new TypeListItemView({model: Items.models[i]})
+            $('.items').append(view.render().el);
+          }
+        }
+      }});
+    },
+
+    addItem: function(e){
+      e.preventDefault();
+      type = Types.create();
+      $('.items').append(new ItemListItemView({model: type}).render().el);
     }
   });
 
@@ -139,7 +233,7 @@
   // The App router initializes the app by calling `UserList.fetch()`
   var App = Backbone.Router.extend({
     routes: {
-      "/:type"     : "listItems"
+      "/items/:id"     : "listItems"
     },
 
     initialize: function(){
@@ -148,7 +242,7 @@
       var types = new TypeListView();
     },
 
-    listItems: function(){
+    listItems: function(id){
 
     }
   });
@@ -169,6 +263,15 @@
     });
 
     Backbone.history.start();
+
+    // All link clicks go to app.navigate()
+    $(document).on("click", "a:not([data-bypass])", function(evt) {
+      var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
+      var root = location.protocol + "//" + location.host + app.root;
+
+        evt.preventDefault();
+        Backbone.history.navigate(href.attr, true);
+    });
     
     // Includes the couchlogin
     // check it out here: <a href="https://github.com/couchapp/couchdb-login-jquery">https://github.com/couchapp/couchdb-login-jquery</a>
@@ -191,10 +294,10 @@
         CurrentUser.set(new UserModel().toJSON());
         CurrentUser.trigger("change:name");
         if(CurrentSession != null) CurrentSession.destroy();
-        $('#content').html('');
+        $('#list').html('');
       }
     });
 
   }, 100);
 
-}(jQuery,_,Backbone,Mustache,window,document));
+}(jQuery,_,Backbone,Handlebars,window,document));

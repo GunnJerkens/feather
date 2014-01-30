@@ -1,0 +1,10 @@
+{
+  "env" : {
+    "public" : {
+      "db" : "http://name:pass@remote.database.com/mydatabase"
+    },
+    "default" : {
+      "db" : "http://name:pass@localhost:5984/mydatabase"
+    }
+  }
+}

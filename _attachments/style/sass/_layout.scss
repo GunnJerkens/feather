@@ -1,3 +1,16 @@
 body {
   padding-top: 50px;
+  font-weight: 200;
+  font-size: 16px;
+}
+nav.navbar .navbar-header a.navbar-brand {
+  z-index: 99;
+  position: relative;
+  padding-left: 50px;
+  img {
+    position: absolute;
+    top: 12px;
+    left: 0px;
+    width: 40px;
+  }
 }
