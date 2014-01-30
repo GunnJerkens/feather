@@ -233,7 +233,8 @@
   // The App router initializes the app by calling `UserList.fetch()`
   var App = Backbone.Router.extend({
     routes: {
-      "/items/:id"     : "listItems"
+      "": "initialize",
+      "items/:id"     : "listItems"
     },
 
     initialize: function(){
@@ -243,7 +244,10 @@
     },
 
     listItems: function(id){
-
+      var type = new TypeListItemView({model: Types.findWhere({_id: id})});
+      $('#list').html(type.render().el);
+      var items = new ItemListView({model: Items.where({_id: id})});
+      console.log(items);
     }
   });
 
@@ -263,15 +267,6 @@
     });
 
     Backbone.history.start();
-
-    // All link clicks go to app.navigate()
-    $(document).on("click", "a:not([data-bypass])", function(evt) {
-      var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
-      var root = location.protocol + "//" + location.host + app.root;
-
-        evt.preventDefault();
-        Backbone.history.navigate(href.attr, true);
-    });
     
     // Includes the couchlogin
     // check it out here: <a href="https://github.com/couchapp/couchdb-login-jquery">https://github.com/couchapp/couchdb-login-jquery</a>
@@ -289,6 +284,15 @@
         // Bootstrapping
         window.app = new App();
         app.navigate("");
+
+        // All link clicks go to app.navigate()
+        $(document).on("click", "a:not([data-bypass])", function(e) {
+          e.preventDefault();
+
+          var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
+          var root = location.protocol + "//" + location.host + app.root;
+          app.navigate(href.attr, true);
+        });
       },
       loggedOut : function(){
         CurrentUser.set(new UserModel().toJSON());
