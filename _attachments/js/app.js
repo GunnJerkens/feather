@@ -19,8 +19,9 @@
       this.loadView(new TypeListView({collection: Types}));
     },
     editType: function(id){
-      console.log(id);
-      this.loadView(new TypeFormView({model: Types.where({ id: id })}));
+      var type = Types.findWhere({ _id: id });
+      console.log(type.get('_id'));
+      this.loadView(new TypeFormView({ model: type }));
     },
     items: function(id){
       this.loadView(new ItemListView({collection: Items.filtered(id), current_type: id}));

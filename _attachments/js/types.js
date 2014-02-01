@@ -33,22 +33,11 @@ var TypeEntryView = Backbone.View.extend({
   },
 
   initialize: function(){
-    _.bindAll(this, "onSubmit");
   },
 
   render: function(){
     $(this.el).html(this.template(this.model.toJSON()));
     return this;
-  },
-
-  onSubmit: function(e){
-    e.preventDefault();
-    console.log($(this.el).serializeObject());
-    this.model.save($(this.el).serializeObject(),
-      {
-        success: function(){}
-      }
-    );
   },
 
   delete: function(){
@@ -101,9 +90,7 @@ var TypeListView = Backbone.View.extend({
     var self = this;
 
     self.$el.append('<button id="addType" class="btn btn-primary" href="#">New Type</button>');
-    console.log(self.subViews);
     _.each(self.subViews, function(type){
-      console.log(type);
       self.$el.append(type.render().el);
     });
   },
@@ -119,29 +106,18 @@ var TypeFieldView = Backbone.View.extend({
   tagName: "div",
   className: "type",
 
-  template: Handlebars.compile($("#type-template").html()),
+  template: Handlebars.compile($("#type-field-template").html()),
 
   events: {
     'click .delete': 'delete'
   },
 
   initialize: function(){
-    _.bindAll(this, "onSubmit");
   },
 
   render: function(){
-    $(this.el).html(this.template(this.model.toJSON()));
+    $(this.el).html(this.template(this.model));
     return this;
-  },
-
-  onSubmit: function(e){
-    e.preventDefault();
-    console.log($(this.el).serializeObject());
-    this.model.save($(this.el).serializeObject(),
-      {
-        success: function(){}
-      }
-    );
   },
 
   delete: function(){
@@ -149,17 +125,6 @@ var TypeFieldView = Backbone.View.extend({
     if (window.confirm("Are you sure you want to delete '" + this.model.get('name') +"'? This will also remove its associated items.")) {
       this.model.destroy();
       this.remove();
-
-      Items.fetch({
-      success: function(){
-        var filtered = Items.where({type: self.model.get('_id')});
-        if (Items.models.length > 0) {
-          for (var i in Items.models) {
-            Items.models[i].destroy();
-          }
-        }
-      }
-    });
     }
   }
 });
@@ -169,7 +134,8 @@ var TypeFormView = Backbone.View.extend({
   id: "types",
 
   events: {
-    "click #addType": "addOne"
+    "click #addField": "addOne",
+    "click #submit": "submit"
   },
 
   initialize: function(){
@@ -178,7 +144,7 @@ var TypeFormView = Backbone.View.extend({
     $("#list").html(self.el);
 
     this.subViews = [];
-    _.each(self.get('fields'), function(field){
+    _.each(self.model.get('fields'), function(field){
       self.subViews.push( new TypeFieldView({ model: fields }) );
     });
     self.render();
@@ -187,15 +153,27 @@ var TypeFormView = Backbone.View.extend({
   render: function(){
     var self = this;
 
-    $(this.el).html('<button id="addType" class="btn btn-primary" href="#">New Type</button>');
+    $(this.el).html('<button id="addField" class="btn btn-primary" href="#">Add Field</button><button id="submit" class="btn btn-default" href="#">Submit</button>');
     _.each(self.subViews, function(type){
+      console.log(type);
       self.$el.append(type);
     });
   },
 
   addOne: function(e){
+    var self = this;
+    
     e.stopPropagation();
-    var field = {name: 'New Field', type: 'text'}
-    this.$el.append(new TypeEntryView({model: field}).render().el);
+    var field = new TypeFieldView({model: {name: 'New Field', type: 'text'} });
+    self.subViews.push(field);
+    this.$el.append(field.render().el);
+  },
+
+  submit: function(e){
+    e.preventDefault();
+    var fields = [];
+    _.each(self.subViews, function(field){
+      console.log(field.$el);
+    });
   }
 });
