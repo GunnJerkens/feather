@@ -74,7 +74,7 @@ module.exports = function(grunt) {
         tasks: ['imagemin']
       },
       couch: {
-        files: ['_attachments/js/app.js', '_attachments/index.html', '_attachments/style/screen.scss'],
+        files: ['_attachments/js/*.js', '_attachments/index.html', '_attachments/style/screen.scss'],
         tasks: ['shell:couchPush']
       }
     }

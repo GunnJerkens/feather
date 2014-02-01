@@ -1,255 +1,47 @@
 ;(function($,_,Backbone,Handlebars,window,document,config,undefined){
+
   Backbone.couch_connector.config.db_name = "feather";
   Backbone.couch_connector.config.ddoc_name = "feather";
   Backbone.couch_connector.config.global_changes = false;
 
-  /* 
-   * Types
-   * 
-   */
-  var Type = Backbone.Model.extend({
-    defaults: {
-      name: "default",
-      fields: [],
-      count: function(){
-        return Items.where({'type': this.name}).length;
-      },
-      collection: "types"
-    },
-  });
-
-  var TypeList = Backbone.Collection.extend({
-    db: {
-      view: "types",
-      changes: false,
-      filter: Backbone.couch_connector.config.ddoc_name + "/types"
-    },
-
-    url: "/types",
-    model: Type
-  });
-  var Types = new TypeList();
-
-  var TypeListItemView = Backbone.View.extend({
-    tagName: "div",
-    className: "type",
-
-    template: Handlebars.compile($("#type-template").html()),
-
-    initialize: function(){
-      _.bindAll(this, "onSubmit");
-    },
-
-    render: function(){
-      $(this.el).html(this.template(this.model.toJSON()));
-      return this;
-    },
-
-    onSubmit: function(e){
-      e.preventDefault();
-      console.log($(this.el).serializeObject());
-      this.model.save($(this.el).serializeObject(), 
-        {
-          success: function(){}
-        }
-      );
-    },
-
-    delete: function(){
-      if (window.confirm("Are you sure you want to delete '" + this.model.get('name') +"'?")) {
-        this.model.destroy();
-        this.remove();
-      }
-    },
-
-    addField: function(){
-      var fields = this.model.get('fields');
-      fields.push({name:'Name',type:'Type',index: fields.length});
-      this.model.save({fields: fields});
-      this.render();
-    },
-
-    removeField: function(e){
-      var index = $(this.el).index($(e.currentTarget));
-      var fields = this.model.get('fields');
-    }
-  });
-
-  var TypeListView = Backbone.View.extend({
-
-    el: $('#list'),
-
-    events: {
-      "click #addItem": "addItem"
-    },
-
-    initialize: function(){
-      $(this.el).html('<a id="addItem" href="#">New Item</a><div class="types"></div>');
-      Types.fetch({success: function(){
-
-        if (Types.models.length > 0) {
-          for (var i in Types.models) {
-            var view = new TypeListItemView({model: Types.models[i]})
-            $('.types').append(view.render().el);
-          }
-        }
-      }});
-    },
-
-    addItem: function(e){
-      e.preventDefault();
-      type = Types.create();
-      $('.types').append(new TypeListItemView({model: type}).render().el);
-    }
-  });
-
-  /* 
-   * Items
-   * 
-   */
-  var Item = Backbone.Model.extend({
-    defaults: {
-      name: "default",
-      fields: [],
-      collection: "items"
-    }
-  });
-
-  var ItemList = Backbone.Collection.extend({
-    db: {
-      view: "items",
-      changes: false,
-      filter: Backbone.couch_connector.config.ddoc_name + "/items"
-    },
-
-    url: "/items",
-    model: Item,
-
-    count: function(){
-      
-    }
-  });
-  var Items = new ItemList();
-
-  var ItemListItemView = Backbone.View.extend({
-    tagName: "form",
-    className: "form",
-
-    template: Handlebars.compile($("#type-template").html()),
-
-    initialize: function(){
-      _.bindAll(this, "onSubmit");
-    },
-
-    render: function(){
-      $(this.el).html(this.template(this.model.toJSON()));
-      return this;
-    },
-
-    onSubmit: function(e){
-      e.preventDefault();
-      console.log($(this.el).serializeObject());
-      this.model.save($(this.el).serializeObject(), 
-        {
-          success: function(){}
-        }
-      );
-    },
-
-    delete: function(){
-      if (window.confirm("Are you sure you want to delete '" + this.model.get('name') +"'?")) {
-        this.model.destroy();
-        this.remove();
-      }
-    },
-
-    addField: function(){
-      var fields = this.model.get('fields');
-      fields.push({name:'Name',type:'Type',index: fields.length});
-      this.model.save({fields: fields});
-      this.render();
-    },
-
-    removeField: function(e){
-      var index = $(this.el).index($(e.currentTarget));
-      console.log(index);
-    }
-  });
-
-  var ItemListView = Backbone.View.extend({
-
-    el: $('#list'),
-
-    events: {
-      "click #addItem": "addItem"
-    },
-
-    initialize: function(){
-      $(this.el).html('<a id="addItem" href="#">New Item</a><div class="items"></div>');
-      Items.fetch({success: function(){
-
-        if (Items.models.length > 0) {
-          for (var i in Items.models) {
-            var view = new TypeListItemView({model: Items.models[i]})
-            $('.items').append(view.render().el);
-          }
-        }
-      }});
-    },
-
-    addItem: function(e){
-      e.preventDefault();
-      type = Types.create();
-      $('.items').append(new ItemListItemView({model: type}).render().el);
-    }
-  });
-
-
-  /* 
-   * User
-   * 
-   */
-  var UserModel = Backbone.Model.extend({
-    defaults : {
-      name : "Anonymous"
-    }
-  });
-  
-  window.CurrentUser = new UserModel();
-  
-  var UserSession = Backbone.Model.extend({
-  });
-
-  var UserListCollection = Backbone.Collection.extend({
-    db : {
-      changes : true
-    },
-    url : "/user_list",
-    model : UserSession
-  });
-
-  var UserList = new UserListCollection();
 
   // The App router initializes the app by calling `UserList.fetch()`
   var App = Backbone.Router.extend({
     routes: {
       "": "initialize",
-      "items/:id"     : "listItems"
+      "types/:id" : "editType",
+      "types/:id/items" : "items",
+      "items/:id" : "editItem"
     },
 
     initialize: function(){
       UserList.fetch();
-
-      var types = new TypeListView();
+      this.loadView(new TypeListView({collection: Types}));
     },
-
-    listItems: function(id){
-      var type = new TypeListItemView({model: Types.findWhere({_id: id})});
-      $('#list').html(type.render().el);
-      var items = new ItemListView({model: Items.where({_id: id})});
-      console.log(items);
+    editType: function(id){
+      console.log(id);
+      this.loadView(new TypeFormView({model: Types.where({ id: id })}));
+    },
+    items: function(id){
+      this.loadView(new ItemListView({collection: Items.filtered(id), current_type: id}));
+    },
+    editItem: function(id){
+      console.log(id2);
+    },
+    loadView: function(view){
+      this.view && (this.view.close ? this.view.close() : this.view.remove());
+      this.view = view;
     }
   });
+
+  /*
+   * Utility
+   */
+  Backbone.View.prototype.close = function () {
+    _.each(this.subViews, function(view) { view.remove(); });
+    this.remove();
+    this.unbind();
+  };
 
   // The current session will be stored in here
   var CurrentSession = null;
