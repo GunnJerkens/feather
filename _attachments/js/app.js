@@ -10,8 +10,7 @@
     routes: {
       "": "initialize",
       "types/:id" : "editType",
-      "types/:id/items" : "items",
-      "items/:id" : "editItem"
+      "types/:id/items" : "items"
     },
 
     initialize: function(){
@@ -20,14 +19,11 @@
     },
     editType: function(id){
       var type = Types.findWhere({ _id: id });
-      console.log(type.get('_id'));
       this.loadView(new TypeFormView({ model: type }));
     },
     items: function(id){
-      this.loadView(new ItemListView({collection: Items.filtered(id), current_type: id}));
-    },
-    editItem: function(id){
-      console.log(id2);
+      var type = Types.findWhere({_id: id});
+      this.loadView(new ItemListView({collection: Items.filtered(id), current_type: type.toJSON()}));
     },
     loadView: function(view){
       this.view && (this.view.close ? this.view.close() : this.view.remove());
@@ -43,6 +39,21 @@
     this.remove();
     this.unbind();
   };
+
+  window.Handlebars.registerHelper('select', function( value, options ){
+      var $el = $('<select />').html( options.fn(this) );
+      $el.find('[value=' + value + ']').attr({'selected':'selected'});
+      return $el.html();
+  });
+
+  window.Handlebars.registerHelper('fieldValues', function(item, fields){
+    var out = "";
+    for (var i in fields){
+      console.log(fields[i]);
+      out += '<input type="'+ fields[i] +'" name="'+ fields[i] +'" value="'+ item[fields[i]] +'" placeholder="'+ fields[i] +'"/>';
+      return out;
+    }
+  });
 
   // The current session will be stored in here
   var CurrentSession = null;

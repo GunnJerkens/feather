@@ -5,7 +5,6 @@
 var Item = Backbone.Model.extend({
   defaults: {
     name: "default",
-    fields: [],
     collection: "items"
   }
 });
@@ -30,19 +29,20 @@ var ItemList = Backbone.Collection.extend({
     return new ItemList({ keys: [id] });
   },
 
-  url: '/by_type',
+  url: '/items',
   model: Item
 });
 var Items = new ItemList();
 
 var ItemEntryView = Backbone.View.extend({
-  tagName: "div",
+  tagName: "form",
   className: "item",
 
   template: Handlebars.compile($("#item-template").html()),
 
   events: {
-    'click .delete': 'delete'
+    'click .delete': 'delete',
+    'click .submit': 'submit'
   },
 
   initialize: function(){
@@ -50,8 +50,12 @@ var ItemEntryView = Backbone.View.extend({
   },
 
   render: function(){
-    $(this.el).html(this.template(this.model.toJSON()));
+    $(this.el).html(this.template({ item: this.model.toJSON(), type: app.view.current_type}));
     return this;
+  },
+
+  submit: function(){
+    this.model.save(this.$el.serializeObject());
   },
 
   delete: function(){
@@ -72,10 +76,14 @@ var ItemListView = Backbone.View.extend({
 
   initialize: function(id){
     var self = this;
+
     self.current_type = id.current_type;
+
+    console.log(self.current_type);
+
     self.collection.fetch({
       success: function(){
-        $("#list").html(self.el);
+        $("#list").append(self.$el);
 
         self.subViews = [];
         self.collection.each(function(item){
@@ -91,15 +99,21 @@ var ItemListView = Backbone.View.extend({
   render: function(){
     var self = this;
 
-    $(this.el).html('<button id="addItem" class="btn btn-primary" href="#">New Item</button>');
-    this.collection.each(function(item){
+    $(this.el).append('<button id="addItem" class="btn btn-primary" href="#">New Item</button>');
+    self.collection.each(function(item){
       self.$el.append(new ItemEntryView({model: item}).render().el);
     });
   },
 
   addOne: function(e){
+    var self = this;
+
     e.stopPropagation();
-    var item = this.collection.create({type: this.current_type});
-    this.$el.append(new ItemEntryView({model: item}).render().el);
+    this.collection.create({type: this.current_type.id}, {
+      wait: true,
+      success: function(item){
+        self.$el.append(new ItemEntryView({model: item}).render().el);
+      }
+    });
   }
 });
