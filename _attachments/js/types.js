@@ -111,7 +111,7 @@ var TypeListView = Backbone.View.extend({
 
 var TypeFieldView = Backbone.View.extend({
   tagName: "div",
-  className: "type",
+  className: "type row",
 
   template: Handlebars.compile($("#type-field-template").html()),
 
@@ -130,7 +130,7 @@ var TypeFieldView = Backbone.View.extend({
   },
 
   changeType: function(e){
-    e.preventDefault();
+    e.stopPropagation();
     this.$el.first('input[name="text"]').val($(e.currentTarget).attr('data-value'));
     app.view.submit();
   },
@@ -146,8 +146,9 @@ var TypeFieldView = Backbone.View.extend({
 });
 
 var TypeFormView = Backbone.View.extend({
-  tagName: "div",
+  tagName: "form",
   id: "types",
+  className: "form-inline",
 
   template: Handlebars.compile($('#type-form-template').html()),
 
@@ -181,9 +182,10 @@ var TypeFormView = Backbone.View.extend({
     var self = this;
     
     e.stopPropagation();
+
     var field = new TypeFieldView({model: {name: '', type: 'text'} });
     self.subViews.push(field);
-    this.$el.append(field.render().el);
+    self.$el.append(field.render().el);
     self.submit();
   },
 
@@ -191,9 +193,9 @@ var TypeFormView = Backbone.View.extend({
     var self = this;
     var fields = [];
     _.each(self.subViews, function(field){
-      fields.push({name: field.$el.find('input[name="name"]').val(), type: field.$el.first('input[name="type"]').val()});
+      fields.push({name: field.$el.find('input[name="name"]').val(), type: field.$el.find('select[name="type"]').val()});
     });
     console.log(fields);
-    self.model.save({fields: fields});
+    self.model.save({name: $('input[name="type_name"]').val(), fields: fields});
   }
 });

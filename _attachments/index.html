@@ -29,10 +29,12 @@
   </body>
 
   <script type="text/template" id="type-template">
-    <a href="types/{{_id}}/items" class="type">{{name}}</a><br />
-    ID: {{_id}}<br />
-    <a href="types/{{_id}}" class="edit btn btn-default">Edit</a>
-    <a class="delete btn btn-danger">Delete</a><br /><br />
+    <div class="row">
+      <a href="types/{{_id}}/items" class="type">{{name}}</a><br />
+      ID: {{_id}}<br />
+      <a href="types/{{_id}}" class="edit btn btn-default">Edit</a>
+      <a class="delete btn btn-danger">Delete</a>
+    </div>
   </script>
 
   <script type="text/template" id="item-template">
@@ -45,24 +47,35 @@
 
   <script type="text/template" id="type-form-template">
     <div class="row">
-      <div class="input-group col-lg-6">
-        <input type="text" name="name" class="form-control" value="{{name}}" placeholder="Name"/>
-        <div class="input-group-btn">
-          <button type="button" id="addField" class="btn btn-success">Add Field</button>
-          <button type="button" id="submit" class="btn btn-primary">Save</button>
-        </div>
+      <div class="col-md-12">
+      <div class="form-group">
+          <input type="text" name="type_name" class="form-control" value="{{name}}" placeholder="Name"/>
+      </div>
+      <div class="form-group">
+          <button type="button" id="addField" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add Field</button>
+          <button type="button" id="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Save</button>
+      </div>
       </div>
     </div>
   </script>
 
   <script type="text/template" id="type-field-template">
-    {{#fields}}  
-      <div class="row">
-        <div class="input-group col-lg-6">
-          <input type="{{type}}" name="{{name}}" class="form-control" value="{{name}}" placeholder="name"/>
+    <div class="form-group col-md-2">
+      <select name="type" data-value="{{type}}" value="{{type}}" class="form-control">
+        {{#select type}}
+          <option value="text">Text</option>
+          <option value="checkbox">Checkbox</option>
+        {{/select}}
+      </select>
+    </div>
+    <div class="form-group col-md-6">
+      <div class="input-group">
+        <input type="text" name="name" class="form-control" value="{{name}}" placeholder="name"/>
+        <div class="input-group-btn">
+          <button type="button" class="delete btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
         </div>
       </div>
-    {{/fields}}
+    </div>
   </script>
 
   <script src="/_utils/script/sha1.js"></script>

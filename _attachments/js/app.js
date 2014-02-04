@@ -90,7 +90,7 @@
         app.navigate("");
 
         // All link clicks go to app.navigate()
-        $(document).on("click", "a:not([data-bypass])", function(e) {
+        $(document).on("click", "a:not(.data-bypass)", function(e) {
           e.preventDefault();
 
           var href = { prop: $(this).prop("href"), attr: $(this).attr("href") };
