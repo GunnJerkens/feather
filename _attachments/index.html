@@ -30,19 +30,10 @@
 
   <script type="text/template" id="type-template">
     <div class="row">
-      <a href="types/{{_id}}/items" class="type">{{name}}</a><br />
-      ID: {{_id}}<br />
-      <a href="types/{{_id}}" class="edit btn btn-default">Edit</a>
-      <a class="delete btn btn-danger">Delete</a>
+      <a href="types/{{_id}}/items" class="type">{{name}}</a>
+      <a href="types/{{_id}}" class="edit btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+      {{#delete}}{{/delete}}
     </div>
-  </script>
-
-  <script type="text/template" id="item-template">
-    {{item.name}}<br />
-    Type: {{type.name}}<br />
-    {{fieldValues item fields}}
-    <button class="submit btn btn-default">Save</button><br /><br />
-    <button class="delete btn btn-danger">Delete</button><br /><br />
   </script>
 
   <script type="text/template" id="type-form-template">
@@ -52,8 +43,8 @@
           <input type="text" name="type_name" class="form-control" value="{{name}}" placeholder="Name"/>
       </div>
       <div class="form-group">
-          <button type="button" id="addField" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add Field</button>
-          <button type="button" id="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Save</button>
+          <button type="button" id="addField" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add Field</button>
+          <button type="button" id="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok"></span> Save</button>
       </div>
       </div>
     </div>
@@ -75,6 +66,15 @@
           <button type="button" class="delete btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
         </div>
       </div>
+    </div>
+  </script>
+
+  <script type="text/template" id="item-template">
+    {{#fieldValues fields}}{{/fieldValues}}
+    <div class="form-group row">
+    <div class="col-md-offset-2 col-sm-10">
+      <button class="submit btn btn-default"><span class="glyphicon glyphicon-ok"></span> Save</button>&nbsp;&nbsp;{{#delete}}{{/delete}}
+    </div>
     </div>
   </script>
 

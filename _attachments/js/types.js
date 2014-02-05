@@ -87,7 +87,7 @@ var TypeListView = Backbone.View.extend({
   render: function(){
     var self = this;
 
-    self.$el.append('<button id="addType" class="btn btn-primary" href="#">New Type</button>');
+    self.$el.append('<button id="addType" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Type</button>');
     _.each(self.subViews, function(type){
       self.$el.append(type.render().el);
     });
@@ -195,7 +195,6 @@ var TypeFormView = Backbone.View.extend({
     _.each(self.subViews, function(field){
       fields.push({name: field.$el.find('input[name="name"]').val(), type: field.$el.find('select[name="type"]').val()});
     });
-    console.log(fields);
     self.model.save({name: $('input[name="type_name"]').val(), fields: fields});
   }
 });

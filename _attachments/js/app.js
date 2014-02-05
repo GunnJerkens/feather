@@ -41,18 +41,28 @@
   };
 
   window.Handlebars.registerHelper('select', function( value, options ){
-      var $el = $('<select />').html( options.fn(this) );
-      $el.find('[value=' + value + ']').attr({'selected':'selected'});
-      return $el.html();
+    var $el = $('<select />').html( options.fn(this) );
+    $el.find('[value=' + value + ']').attr({'selected':'selected'});
+    return $el.html();
   });
 
-  window.Handlebars.registerHelper('fieldValues', function(item, fields){
-    var out = "";
-    for (var i in fields){
-      console.log(fields[i]);
-      out += '<input type="'+ fields[i] +'" name="'+ fields[i] +'" value="'+ item[fields[i]] +'" placeholder="'+ fields[i] +'"/>';
-      return out;
-    }
+  window.Handlebars.registerHelper('fieldValues', function(item){
+    var $el = $('<div class="group col-md-6"></div>');
+    _.each(item, function(field){
+      if (field.type == "checkbox") {
+        var input = $('<div class="row form-group"></div>').html('<div class="col-sm-offset-2 col-sm-10"><div class="checkbox"><label><input type="checkbox" name="'+ field.name +'" /> '+ field.name +'</label></div></div>');
+        if (field.value == "on") input.find('input').attr("checked", "checked");
+        $el.append(input);
+      } else {
+        var input = $('<div class="row form-group"><label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label><div class="col-md-6"><input type="text" class="form-control" name="'+ field.name +'" value="'+ field.value +'" /></div></div>');
+        $el.append(input);
+      }
+    });
+    return $el.html();
+  });
+
+  window.Handlebars.registerHelper('delete', function(item){
+    return '<button class="delete btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>';
   });
 
   // The current session will be stored in here

@@ -4,7 +4,6 @@
  */
 var Item = Backbone.Model.extend({
   defaults: {
-    name: "default",
     collection: "items"
   }
 });
@@ -36,7 +35,7 @@ var Items = new ItemList();
 
 var ItemEntryView = Backbone.View.extend({
   tagName: "form",
-  className: "item",
+  className: "item form-horizontal col-md-8",
 
   template: Handlebars.compile($("#item-template").html()),
 
@@ -50,15 +49,25 @@ var ItemEntryView = Backbone.View.extend({
   },
 
   render: function(){
-    $(this.el).html(this.template({ item: this.model.toJSON(), type: app.view.current_type}));
+    var self = this;
+
+    var current_fields = [];
+    _.each(app.view.current_type.fields, function(field){
+      field.value = self.model.has(field.name) ? self.model.get(field.name) : '';
+      current_fields.push(field);
+    });
+    $(self.el).html(self.template({ item: self.model.toJSON(), fields: current_fields}));
     return this;
   },
 
-  submit: function(){
+  submit: function(e){
+    e.preventDefault();
+    console.log(this.$el.serializeObject());
     this.model.save(this.$el.serializeObject());
   },
 
-  delete: function(){
+  delete: function(e){
+    e.preventDefault();
     if (window.confirm("Are you sure you want to delete '" + this.model.get('name') +"'?")) {
       this.model.destroy();
       this.remove();
@@ -79,8 +88,6 @@ var ItemListView = Backbone.View.extend({
 
     self.current_type = id.current_type;
 
-    console.log(self.current_type);
-
     self.collection.fetch({
       success: function(){
         $("#list").append(self.$el);
@@ -99,7 +106,7 @@ var ItemListView = Backbone.View.extend({
   render: function(){
     var self = this;
 
-    $(this.el).append('<button id="addItem" class="btn btn-primary" href="#">New Item</button>');
+    $(this.el).append('<div class="row"><button id="addItem" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Item</button></div>');
     self.collection.each(function(item){
       self.$el.append(new ItemEntryView({model: item}).render().el);
     });
@@ -107,9 +114,9 @@ var ItemListView = Backbone.View.extend({
 
   addOne: function(e){
     var self = this;
-
     e.stopPropagation();
-    this.collection.create({type: this.current_type.id}, {
+
+    self.collection.create({type: self.current_type._id}, {
       wait: true,
       success: function(item){
         self.$el.append(new ItemEntryView({model: item}).render().el);
