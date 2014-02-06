@@ -3,6 +3,16 @@ module.exports = function(grunt) {
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
+  couch_config = {
+    demo: {
+        db: 'http://admin:xx83983E@localhost:5984/feather',
+        app: './app.js',
+        options: {
+            okay_if_missing: true
+        }
+    }
+  }
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -58,12 +68,9 @@ module.exports = function(grunt) {
       }
     },
 
-    couchapp: {
-      local: {
-        db: 'http://admin:xx83983E@localhost:5984/feather',
-        app: './app.js'
-      }
-    },
+    mkcouchdb: couch_config,
+    rmcouchdb: couch_config,
+    couchapp: couch_config,
 
     watch: {
       styles: {
