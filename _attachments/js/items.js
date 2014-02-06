@@ -17,6 +17,7 @@ var ItemList = Backbone.Collection.extend({
 
   initialize: function(conf){
     var self = this;
+    console.log(self);
     if (conf) {
       if (conf.keys) {
         self.db.keys = conf.keys;

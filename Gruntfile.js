@@ -58,9 +58,10 @@ module.exports = function(grunt) {
       }
     },
 
-    shell: {
-      couchPush: {
-        command: 'couchapp push'
+    couchapp: {
+      local: {
+        db: 'http://admin:xx83983E@localhost:5984/feather',
+        app: './app.js'
       }
     },
 
@@ -75,12 +76,12 @@ module.exports = function(grunt) {
       },
       couch: {
         files: ['_attachments/js/*.js', '_attachments/index.html', '_attachments/style/screen.scss'],
-        tasks: ['shell:couchPush']
+        tasks: ['couchapp:local']
       }
     }
   });
 
-  grunt.registerTask('default', ['compass', 'imagemin', 'watch']);
+  grunt.registerTask('default', ['compass', 'imagemin', 'couchapp:local', 'watch']);
   grunt.registerTask('build', ['compass', 'imagemin']);
   grunt.registerTask('csv', ['convert']);
 
