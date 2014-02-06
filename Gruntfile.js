@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   couch_config = {
-    demo: {
+    dist: {
         db: 'http://admin:xx83983E@localhost:5984/feather',
         app: './app.js',
         options: {
@@ -82,12 +82,12 @@ module.exports = function(grunt) {
       },
       couch: {
         files: ['_attachments/js/*.js', '_attachments/index.html', '_attachments/style/screen.scss'],
-        tasks: ['couchapp:local']
+        tasks: ['couchapp']
       }
     }
   });
 
-  grunt.registerTask('default', ['compass', 'imagemin', 'couchapp:local', 'watch']);
+  grunt.registerTask('default', ['compass', 'imagemin', 'couchapp', 'watch']);
   grunt.registerTask('build', ['compass', 'imagemin']);
   grunt.registerTask('csv', ['convert']);
 
