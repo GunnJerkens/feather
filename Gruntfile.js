@@ -69,7 +69,6 @@ module.exports = function(grunt) {
     },
 
     mkcouchdb: couch_config,
-    rmcouchdb: couch_config,
     couchapp: couch_config,
 
     watch: {
