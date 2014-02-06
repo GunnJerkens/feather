@@ -1,6 +1,5 @@
 #Ignored directories
-node_modules/*
-!node_modules/grunt-couchapp
+node_modules
 
 # Ignore system files, misc.
 *.diff
