@@ -47,19 +47,39 @@
   });
 
   window.Handlebars.registerHelper('fieldValues', function(item){
-    var $el = $('<div class="group col-md-6"></div>');
+    var $el, selected, checked, markup, i, len;
+    markup = '';
     _.each(item, function(field){
       if (field.type == "checkbox") {
-        var input = $('<div class="row form-group"></div>').html('<div class="col-sm-offset-2 col-sm-10"><div class="checkbox"><label><input type="checkbox" name="'+ field.name +'" /> '+ field.name +'</label></div></div>');
-        if (field.value == "on") input.find('input').attr("checked", "checked");
-        $el.append(input);
+        checked = (field.value == "on" ? ' checked' : '');
+        markup += '<div class="row form-group"><div class="col-sm-offset-2 col-sm-10"><div class="checkbox"><label><input type="checkbox" name="'+ field.name +'"'+ checked +' /> '+ field.name +'</label></div></div></div>';
+      } else if (field.type == "select") {
+        markup += '<div class="row form-group"><label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label><div class="col-md-6"><select class="form-control" name="'+ field.name +'">';
+        for (i = 0, len=field.options.length; i < len; i++) {
+          selected = (field.value == field.options[i].value ? ' selected' : '');
+          markup += '<option value="' + field.options[i].value + '"' + selected + '>' + field.options[i].label + '</option>';
+        }
+        markup += '</select></div></div>';
       } else {
-        var input = $('<div class="row form-group"><label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label><div class="col-md-6"><input type="text" class="form-control" name="'+ field.name +'" value="'+ field.value +'" /></div></div>');
-        $el.append(input);
+        markup += '<div class="row form-group"><label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label><div class="col-md-6"><input type="text" class="form-control" name="'+ field.name +'" value="'+ field.value +'" /></div></div>';
       }
     });
-    return $el.html();
+    return markup;
   });
+
+  window.Handlebars.registerHelper('fieldOption', function(option){
+    var markup;
+    markup = '<li>' +
+        '<input type="text" name="value" value="'+option.value+'">:' +
+        '<input type="text" name="label" value="'+option.label+'">' +
+        '<div class="input-group-btn">' +
+          '<button type="button" class="delOption btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>' +
+        '</div>' +
+      '</li>';
+    return markup;
+  });
+
+
 
   window.Handlebars.registerHelper('delete', function(item){
     return '<button class="delete btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>';

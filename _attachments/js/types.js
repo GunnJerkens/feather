@@ -116,7 +116,7 @@ var TypeFieldView = Backbone.View.extend({
   template: Handlebars.compile($("#type-field-template").html()),
 
   events: {
-    'click .delete': 'delete',
+    'click .input-group-btn .delete': 'delete',
     "click .dropdown-menu a" : "changeType"
   },
 
@@ -154,7 +154,9 @@ var TypeFormView = Backbone.View.extend({
 
   events: {
     "click #addField": "addOne",
-    "click #submit": "submit"
+    "click #submit": "submit",
+    "click #addOption" : "addOption",
+    "click .delOption" : "delOption"
   },
 
   initialize: function(){
@@ -175,6 +177,7 @@ var TypeFormView = Backbone.View.extend({
     self.$el.append(self.template(self.model.toJSON()));
     _.each(self.subViews, function(type){
       self.$el.append(type.el);
+      $(type.el).find('.field-options').toggle('select' == type.model.type);
     });
   },
 
@@ -189,11 +192,44 @@ var TypeFormView = Backbone.View.extend({
     self.submit();
   },
 
+  addOption: function(e){
+    var markup;
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!this.model.options) this.model.options = [];
+    markup = Handlebars.helpers.fieldOption({
+      value: 'value',
+      label: 'Label'
+    });
+    $(e.currentTarget).prev('ul').append(markup);
+  },
+
+  delOption: function(e){
+    $(e.currentTarget).closest('li').remove();
+  },
+
   submit: function(){
-    var self = this;
-    var fields = [];
-    _.each(self.subViews, function(field){
-      fields.push({name: field.$el.find('input[name="name"]').val(), type: field.$el.find('select[name="type"]').val()});
+    var self, fields, field;
+    self = this;
+    fields = [];
+    _.each(self.subViews, function(fieldView){
+      field = {
+        name: fieldView.$el.find('input[name="name"]').val(),
+        type: fieldView.$el.find('select[name="type"]').val()
+      };
+      if ('select' == field.type) {
+        field.options = [];
+        fieldView.$el.find('.field-options li').each(function() {
+          var optionView, value, label;
+          optionView = $(this);
+          field.options.push({
+            value: optionView.find('input[name=value]').val(),
+            label: optionView.find('input[name=label]').val()
+          });
+        });
+      }
+      fields.push(field);
     });
     self.model.save({name: $('input[name="type_name"]').val(), fields: fields});
   }
