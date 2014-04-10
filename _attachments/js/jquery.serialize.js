@@ -37,4 +37,14 @@
     $.each(this.serializeArray(), extend);
     return result;
   };
+
+  // Include unchecked checkboxes with a value `false`
+  $.fn.serializeObjectToggleCheckboxes = function () {
+    var data = $(this).serializeObject();
+    $(this).find('[type=checkbox]').each(function() {
+      var name = $(this).attr('name');
+      if (!data.hasOwnProperty(name)) data[name] = false;
+    });
+    return data;
+  };
 })(jQuery);

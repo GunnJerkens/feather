@@ -62,9 +62,10 @@ var ItemEntryView = Backbone.View.extend({
   },
 
   submit: function(e){
+    var postData;
     e.preventDefault();
-    console.log(this.$el.serializeObject());
-    this.model.save(this.$el.serializeObject());
+    postData = this.$el.serializeObjectToggleCheckboxes();
+    this.model.save(postData);
   },
 
   delete: function(e){
