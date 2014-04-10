@@ -16,8 +16,5 @@ Fill in your db info in the Gruntfile under `couch_config`. Run `grunt mkcouchdb
 You can edit the CMS functionality in `_attachments`. Feather uses backbone.js. You can also set up custom views to use as API endpoints in `app.js`.
 
 ###License
-feather is a FREE framework and is licensed under the following:
-http://www.opensource.org/licenses/mit-license.php
 
-Theme files, their HTML, CSS, JavaScript/jQuery and images are licensed under the following unless otherwise stated:
-http://www.opensource.org/licenses/mit-license.php
+MIT
