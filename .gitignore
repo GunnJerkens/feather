@@ -1,4 +1,7 @@
-#Ignored directories
+# Ignored config
+couch_config.json
+
+# Ignored directories
 node_modules
 
 # Ignore system files, misc.

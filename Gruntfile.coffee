@@ -3,12 +3,7 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks)
 
-  couch_config =
-    local:
-      db: 'http://admin:xx83983E@localhost:5984/feather'
-      app: './app.js'
-      options:
-        okay_if_missing: true
+  couch_config = grunt.file.readJSON 'couch_config.json'
 
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
