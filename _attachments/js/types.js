@@ -87,7 +87,7 @@ var TypeListView = Backbone.View.extend({
   render: function(){
     var self = this;
 
-    self.$el.append('<button id="addType" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Type</button>');
+    self.$el.append('<div class="row topType"><h1>My Fields</h1><button id="addType" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Type</button></div>');
     _.each(self.subViews, function(type){
       self.$el.append(type.render().el);
     });
@@ -148,7 +148,7 @@ var TypeFieldView = Backbone.View.extend({
 var TypeFormView = Backbone.View.extend({
   tagName: "form",
   id: "types",
-  className: "form-inline",
+  className: "",
 
   template: Handlebars.compile($('#type-form-template').html()),
 
