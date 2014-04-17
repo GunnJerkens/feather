@@ -45,42 +45,40 @@
       </div>
       <div class="form-group">
           <button type="button" id="addField" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add Field</button>
-          <button type="button" id="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok"></span> Save</button>
+          <button type="button" id="submit" class="btn btn-default save"><span class="glyphicon glyphicon-ok"></span> Save</button>
       </div>
       </div>
     </div>
   </script>
 
   <script type="text/template" id="type-field-template">
-    <div class="row">
-    <div class="form-group col-md-4">
-      <label>Select an input type</label>
-      <select name="type" data-value="{{type}}" value="{{type}}" class="form-control">
-        {{#select type}}
-          <option value="text">Text</option>
-          <option value="checkbox">Checkbox</option>
-          <option value="select">Select</option>
-        {{/select}}
-      </select>
-    </div>
-    <div class="form-group input-align col-md-8">
-      <div class="input-group">
-        <input type="text" name="name" class="form-control" value="{{name}}" placeholder="name"/>
-        <div class="input-group-btn">
-          <button type="button" class="delete btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+    <div class="row subFields">
+      <div class="form-group col-md-4">
+        <label>Select an input type</label>
+        <select name="type" data-value="{{type}}" value="{{type}}" class="form-control">
+          {{#select type}}
+            <option value="text">Text</option>
+            <option value="checkbox">Checkbox</option>
+            <option value="select">Select</option>
+          {{/select}}
+        </select>
+      </div>
+      <div class="form-group input-align col-md-8">
+        <div class="input-group">
+          <input type="text" name="name" class="form-control" value="{{name}}" placeholder="name"/>
+          <div class="input-group-btn">
+            <button type="button" class="delete btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+          </div>
         </div>
       </div>
-    </div>
-    </div>
-    <div class="row">
-    <div class="form-group col-md-12 field-options">
-      <ul>
-        {{#each options}}
-          {{#fieldOption this}}{{/fieldOption}}
-        {{/each}}
-      </ul>
-      <button id="addOption" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Option</button>
-    </div>
+      <div class="form-group col-md-12 field-options">
+        <ul>
+          {{#each options}}
+            {{#fieldOption this}}{{/fieldOption}}
+          {{/each}}
+        </ul>
+        <button id="addOption" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Option</button>
+      </div>
     </div>
   </script>
 

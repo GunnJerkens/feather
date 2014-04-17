@@ -156,7 +156,8 @@ var TypeFormView = Backbone.View.extend({
     "click #addField": "addOne",
     "click #submit": "submit",
     "click #addOption" : "addOption",
-    "click .delOption" : "delOption"
+    "click .delOption" : "delOption",
+    "change [name=type]" : "onFieldTypeChange"
   },
 
   initialize: function(){
@@ -177,7 +178,7 @@ var TypeFormView = Backbone.View.extend({
     self.$el.append(self.template(self.model.toJSON()));
     _.each(self.subViews, function(type){
       self.$el.append(type.el);
-      $(type.el).find('.field-options').toggle('select' == type.model.type);
+      self.updateFieldOptions(type.el, type.model.type);
     });
   },
 
@@ -207,6 +208,19 @@ var TypeFormView = Backbone.View.extend({
 
   delOption: function(e){
     $(e.currentTarget).closest('li').remove();
+  },
+  
+  onFieldTypeChange: function(e) {
+    var fieldType, row;
+    fieldType = $(e.currentTarget);
+    row = fieldType.closest('.row');
+    this.updateFieldOptions(row, fieldType.val());
+  },
+  
+  updateFieldOptions: function(row, type) {
+    // a bit messy: don't care if row is a jQuery object of DOM element
+    console.log($(row).find('.field-options'));
+    $(row).find('.field-options').toggle('select' == type);
   },
 
   submit: function(){

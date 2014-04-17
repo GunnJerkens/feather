@@ -21,7 +21,7 @@ nav.navbar .navbar-header a.navbar-brand {
 }
 
 .input-align {
-  margin-top: 28px;
+  margin-top: 27px;
 }
 
 #types {
@@ -36,6 +36,11 @@ nav.navbar .navbar-header a.navbar-brand {
     margin-top: 20px;
     margin-bottom: 10px;
   }
+  .subFields {
+    margin: 0;
+    padding: 15px 0 0 0;
+    border-top: 1px solid #ccc;
+  }
 }
 
 .field-options {
@@ -47,8 +52,9 @@ nav.navbar .navbar-header a.navbar-brand {
     list-style-type: none;
     margin: 0 0 15px 0;
     padding: 0;
-    .input-group {
-      margin-bottom: 15px;
+    .alignleft {
+      float: left;
+      margin-right: 15px;
     }
   }
 }

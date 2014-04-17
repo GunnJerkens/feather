@@ -53,13 +53,13 @@ module.exports = (grunt) ->
     watch:
       styles:
         files: ['_attachments/style/**/*.{sass,scss}','_attachments/img/ui/*.png']
-        tasks: ['compass']
+        tasks: ['compass', 'couchapp:local']
       images:
         files: ['_attachments/img/src/*.{png,jpg,gif}']
-        tasks: ['imagemin']
+        tasks: ['imagemin', 'couchapp:local']
       couch:
         files: ['_attachments/js/*.js', '_attachments/index.html', '_attachments/style/screen.scss']
-        tasks: ['couchapp']
+        tasks: ['couchapp:local']
 
   grunt.registerTask('default', ['compass', 'imagemin', 'couchapp:local', 'watch'])
   grunt.registerTask('build', ['compass', 'imagemin', 'couchapp'])
