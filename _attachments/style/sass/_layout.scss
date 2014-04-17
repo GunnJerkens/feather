@@ -20,9 +20,8 @@ nav.navbar .navbar-header a.navbar-brand {
   margin: 20px 0;
 }
 
-.type {
-  width: 100%;
-  max-width: 620px;
+.input-align {
+  margin-top: 28px;
 }
 
 #types {
@@ -40,7 +39,16 @@ nav.navbar .navbar-header a.navbar-brand {
 }
 
 .field-options {
+  ul {
+    margin: 0;
+    padding: 0;
+  }
   li {
     list-style-type: none;
+    margin: 0 0 15px 0;
+    padding: 0;
+    .input-group {
+      margin-bottom: 15px;
+    }
   }
 }

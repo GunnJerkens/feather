@@ -24,7 +24,7 @@ var Types = new TypeList();
 
 var TypeEntryView = Backbone.View.extend({
   tagName: "div",
-  className: "type",
+  className: "row",
 
   template: Handlebars.compile($("#type-template").html()),
 
@@ -111,7 +111,7 @@ var TypeListView = Backbone.View.extend({
 
 var TypeFieldView = Backbone.View.extend({
   tagName: "div",
-  className: "type row",
+  className: "row",
 
   template: Handlebars.compile($("#type-field-template").html()),
 
@@ -199,7 +199,7 @@ var TypeFormView = Backbone.View.extend({
 
     if (!this.model.options) this.model.options = [];
     markup = Handlebars.helpers.fieldOption({
-      value: 'value',
+      value: 'Value',
       label: 'Label'
     });
     $(e.currentTarget).prev('ul').append(markup);

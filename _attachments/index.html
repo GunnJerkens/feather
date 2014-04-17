@@ -30,7 +30,7 @@
 
   <script type="text/template" id="type-template">
     <div class="row">
-      <a href="types/{{_id}}/items" class="type">{{name}}</a>
+      <a href="types/{{_id}}/items" class="type">{{name}}</a><br>
       <a href="types/{{_id}}" class="edit btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
       {{#delete}}{{/delete}}
     </div>
@@ -52,7 +52,8 @@
   </script>
 
   <script type="text/template" id="type-field-template">
-    <div class="form-group col-md-2">
+    <div class="row">
+    <div class="form-group col-md-4">
       <label>Select an input type</label>
       <select name="type" data-value="{{type}}" value="{{type}}" class="form-control">
         {{#select type}}
@@ -62,7 +63,7 @@
         {{/select}}
       </select>
     </div>
-    <div class="form-group col-md-6">
+    <div class="form-group input-align col-md-8">
       <div class="input-group">
         <input type="text" name="name" class="form-control" value="{{name}}" placeholder="name"/>
         <div class="input-group-btn">
@@ -70,7 +71,9 @@
         </div>
       </div>
     </div>
-    <div class="form-group col-md-6 field-options">
+    </div>
+    <div class="row">
+    <div class="form-group col-md-12 field-options">
       <ul>
         {{#each options}}
           {{#fieldOption this}}{{/fieldOption}}
@@ -78,15 +81,15 @@
       </ul>
       <button id="addOption" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Option</button>
     </div>
+    </div>
   </script>
 
   <script type="text/template" id="item-template">
-    {{#fieldValues fields}}{{/fieldValues}}
     <div class="form-group row">
-    <div class="col-md-offset-2 col-sm-10">
+      {{#fieldValues fields}}{{/fieldValues}}
       <button class="submit btn btn-default"><span class="glyphicon glyphicon-ok"></span> Save</button>&nbsp;&nbsp;{{#delete}}{{/delete}}
     </div>
-    </div>
+
   </script>
 
   <script src="/_utils/script/sha1.js"></script>

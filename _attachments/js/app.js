@@ -70,10 +70,14 @@
   window.Handlebars.registerHelper('fieldOption', function(option){
     var markup;
     markup = '<li>' +
-        '<input type="text" name="value" value="'+option.value+'">:' +
-        '<input type="text" name="label" value="'+option.label+'">' +
-        '<div class="input-group-btn">' +
-          '<button type="button" class="delOption btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>' +
+        '<div class="input-group col-md-6">' +
+          '<input type="text" class="form-control" name="value" value="'+option.value+'">' +
+        '</div>' +
+        '<div class="input-group col-md-6">' +
+          '<input type="text" class="form-control" name="label" value="'+option.label+'">' +
+          '<div class="input-group-btn">' +
+            '<button type="button" class="delOption btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>' +
+          '</div>' +
         '</div>' +
       '</li>';
     return markup;
