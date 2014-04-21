@@ -7,7 +7,7 @@
     "grunt-contrib-watch": "~0.4.3",
     "grunt-contrib-imagemin": "~0.4.0",
     "grunt-browser-sync": "~0.3.0",
-    "grunt-couchapp": "https://github.com/apkostka/grunt-couchapp/tarball/master",
+    "grunt-couchapp": "https://github.com/GunnJerkens/grunt-couchapp/tarball/master",
     "couchapp": "~0.10.0",
     "matchdep": "~0.1.2"
   }
