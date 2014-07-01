@@ -9,10 +9,9 @@ You'll need to have
 [CouchDB](http://docs.couchdb.org/en/latest/install/index.html) installed. Run
 `npm install` for dependencies.
 
-1. log in to your CouchDB web interface
-  - http://<hostname>/_utils/index.html, link in the extreme bottom of the right sidebar
-2. copy `couch_config.sample.json` to `couch_config.json` and update the values
-3. copy `_attachments/js/config.sample.js` to `_attachments/js/config.js` and update the values
+1. copy `couch_config.sample.json` to `couch_config.json` and update the values
+2. copy `_attachments/js/config.sample.js` to `_attachments/js/config.js` and update the values
+3. run `grunt mkcouchdb:public` to create a new database from your configuration
 4. run `grunt couchapp:public` to populate the database you created
 5. go to http://<hostname>/<db_name>/_design/<db_name>/index.html and begin inputting data
 
