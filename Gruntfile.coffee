@@ -3,7 +3,7 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks)
 
-  couch_config = grunt.file.readJSON 'couch_config.json'
+  couchConfig = grunt.file.readJSON 'couch_config.json'
 
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
@@ -47,8 +47,8 @@ module.exports = (grunt) ->
           ext: '.json'
         ]
 
-    mkcouchdb: couch_config
-    couchapp: couch_config
+    mkcouchdb: couchConfig
+    couchapp: couchConfig
 
     watch:
       styles:

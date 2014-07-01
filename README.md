@@ -9,23 +9,12 @@ You'll need to have
 [CouchDB](http://docs.couchdb.org/en/latest/install/index.html) installed. Run
 `npm install` for dependencies.
 
-Add a `couch_config.json` file, like the following (replace `<username>`,
-`<password>`, and `example.com` with your info:
-```
-{
-  "local": {
-    "db": "http://<username>:<password>@localhost:5984/feather",
-    "app": "./app.js",
-    "options": {
-      "okay_if_missing": true
-    }
-  },
-  "public": {
-    "db": "http://<username>:<password>@example.com/feather",
-    "app": "./app.js"
-  }
-}
-```
+1. log in to your CouchDB web interface
+  - http://<hostname>/_utils/index.html, link in the extreme bottom of the right sidebar
+2. copy `couch_config.sample.json` to `couch_config.json` and update the values
+3. copy `_attachments/js/config.sample.js` to `_attachments/js/config.js` and update the values
+4. run `grunt couchapp:public` to populate the database you created
+5. go to http://<hostname>/<db_name>/_design/<db_name>/index.html and begin inputting data
 
 NOTE: I'm currently using a patched version of `grunt-couchapp` because the
 version on npm doesn't allow basic auth. I'll remove and re-add to
