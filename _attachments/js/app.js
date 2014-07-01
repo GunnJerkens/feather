@@ -1,9 +1,8 @@
 ;(function($,_,Backbone,Handlebars,window,document,config,undefined){
 
-  Backbone.couch_connector.config.db_name = "feather";
-  Backbone.couch_connector.config.ddoc_name = "feather";
+  Backbone.couch_connector.config.db_name = config.dbName;
+  Backbone.couch_connector.config.ddoc_name = config.dbName;
   Backbone.couch_connector.config.global_changes = false;
-
 
   // The App router initializes the app by calling `UserList.fetch()`
   var App = Backbone.Router.extend({
@@ -140,4 +139,4 @@
 
   }, 100);
 
-}(jQuery,_,Backbone,Handlebars,window,document));
+}(jQuery,_,Backbone,Handlebars,window,document,config));

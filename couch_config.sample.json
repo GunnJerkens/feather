@@ -1,0 +1,15 @@
+{
+  "default": {
+    "db": "http://<username>:<password>@localhost:5984/<db_name>",
+    "dbName": "<db_name>",
+    "app": "./app.js",
+    "options": {
+      "okay_if_missing": true
+    }
+  },
+  "public": {
+    "db": "http://<username>:<password>@<hostname>:5984/<db_name>",
+    "dbName": "<db_name>",
+    "app": "./app.js"
+  }
+}

@@ -1,11 +1,13 @@
-var couchapp, ddoc, path;
+var couchapp, ddoc, path, config;
 
 couchapp = require('couchapp');
 
 path = require('path');
 
+config = require('./couch_config.json');
+
 ddoc = {
-  _id: '_design/feather',
+  _id: '_design/'+config.public.dbName,
   rewrites: {},
   views: {},
   shows: {},

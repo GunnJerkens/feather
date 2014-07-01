@@ -1,5 +1,6 @@
-# Ignored config
+# Couch config files
 couch_config.json
+_attachments/js/config.js
 
 # Ignored directories
 node_modules
