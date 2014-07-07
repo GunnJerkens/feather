@@ -58,3 +58,16 @@ nav.navbar .navbar-header a.navbar-brand {
     }
   }
 }
+
+span.value {
+  padding-top: 7px;
+  display: inline-block;
+
+  &.glyphicon {
+    color: lightgray;
+
+    &.glyphicon-ok {
+      color: green;
+    }
+  }
+}

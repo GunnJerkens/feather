@@ -31,8 +31,10 @@
   <script type="text/template" id="type-template">
     <div class="row">
       <a href="types/{{_id}}/items" class="type">{{name}}</a><br>
+      {{#adminOnly this}}
       <a href="types/{{_id}}" class="edit btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
       {{#delete}}{{/delete}}
+      {{/adminOnly}}
     </div>
   </script>
 
@@ -85,7 +87,7 @@
   <script type="text/template" id="item-template">
     <div class="form-group row">
       {{#fieldValues fields}}{{/fieldValues}}
-      <button class="submit btn btn-default"><span class="glyphicon glyphicon-ok"></span> Save</button>&nbsp;&nbsp;{{#delete}}{{/delete}}
+      <button class="submit btn btn-default"><span class="glyphicon glyphicon-ok"></span> Save</button>&nbsp;&nbsp;{{#adminOnly this}}{{#delete}}{{/delete}}{{/adminOnly}}
     </div>
 
   </script>

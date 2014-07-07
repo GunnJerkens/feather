@@ -45,22 +45,71 @@
     return $el.html();
   });
 
+  window.Handlebars.registerHelper('adminOnly', function(context, options){
+    out = '';
+    if (CurrentUser.get('roles').indexOf('admin') > -1) {
+      out = options.fn(context);
+    }
+    return out;
+  });
+
   window.Handlebars.registerHelper('fieldValues', function(item){
-    var $el, selected, checked, markup, i, len;
+    var $el, selected, checked, markup, i, len, fieldsEditable, disabled;
+    if (CurrentUser.get('roles').indexOf('admin') > -1) {
+      fieldsEditable = true;
+    } else {
+      fieldsEditable = ['status', 'price']; // TODO: add field property to set editability by non-admin users
+    }
     markup = '';
     _.each(item, function(field){
+      disabled = !(fieldsEditable === true || fieldsEditable.indexOf(field.name) > -1);
       if (field.type == "checkbox") {
         checked = (field.value == "on" ? ' checked' : '');
-        markup += '<div class="row form-group"><div class="col-sm-offset-2 col-sm-10"><div class="checkbox"><label><input type="checkbox" name="'+ field.name +'"'+ checked +' /> '+ field.name +'</label></div></div></div>';
-      } else if (field.type == "select") {
-        markup += '<div class="row form-group"><label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label><div class="col-md-6"><select class="form-control" name="'+ field.name +'">';
-        for (i = 0, len=field.options.length; i < len; i++) {
-          selected = (field.value == field.options[i].value ? ' selected' : '');
-          markup += '<option value="' + field.options[i].value + '"' + selected + '>' + field.options[i].label + '</option>';
+        markup += '<div class="row form-group">';
+        if ( !disabled ) {
+          markup += '<div class="col-sm-offset-2 col-sm-10">' +
+              '<div class="checkbox">' +
+                '<label>' +
+                  '<input type="checkbox" name="'+ field.name +'"'+ checked +' '+(disabled ? 'disabled' : '')+' />' +
+                  ' '+ field.name +
+                '</label>' +
+              '</div>' +
+            '</div>';
+        } else {
+          markup += '<label class="col-sm-2 control-label" for="'+ field.name +'">' +
+            field.name +': ' +
+            '</label>' +
+          '<div class="col-md-6"><span class="value glyphicon glyphicon-' + (checked ? 'ok' : 'remove') + '"></span></div>';
         }
-        markup += '</select></div></div>';
+        markup += '</div>';
+      } else if (field.type == "select") {
+        markup += '<div class="row form-group">' +
+            '<label class="col-sm-2 control-label" for="'+ field.name +'">'+
+            field.name +': ' +
+            '</label>' +
+          '<div class="col-md-6">';
+        if ( !disabled ) {
+          markup += '<select class="form-control" name="'+ field.name +'">';
+          for (i = 0, len=field.options.length; i < len; i++) {
+            selected = (field.value == field.options[i].value ? ' selected' : '');
+            markup += '<option value="' + field.options[i].value + '"' + selected + '>' + field.options[i].label + '</option>';
+          }
+          markup += '</select>';
+        } else {
+          markup += '<span class="value">'+ field.value +'</span>';
+        }
+        markup += '</div></div>';
       } else {
-        markup += '<div class="row form-group"><label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label><div class="col-md-6"><input type="text" class="form-control" name="'+ field.name +'" value="'+ field.value +'" /></div></div>';
+        markup += '<div class="row form-group">' +
+          '<label class="col-sm-2 control-label" for="'+ field.name +'">'+ field.name +': </label>' +
+          '<div class="col-md-6">';
+        if ( !disabled ) {
+          markup += '<input type="text" class="form-control" name="'+ field.name +'" value="'+ field.value +'" />';
+        } else {
+          markup += '<span class="value">'+ field.value +'</span>';
+        }
+        markup += '</div>' +
+          '</div>';
       }
     });
     return markup;
