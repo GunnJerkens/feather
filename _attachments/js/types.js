@@ -85,9 +85,17 @@ var TypeListView = Backbone.View.extend({
   },
 
   render: function(){
-    var self = this;
+    var self = this, markup;
 
-    self.$el.append('<div class="row topType"><h1>My Fields</h1><button id="addType" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Type</button></div>');
+    markup = '<div class="row topType"><h1>My Lists</h1>';
+
+    if (CurrentUser.get('roles').indexOf('admin') > -1) {
+      markup += '<button id="addType" class="btn btn-primary" href="#"><span class="glyphicon glyphicon-plus"></span> New Type</button>';
+    }
+
+    markup += '</div>';
+
+    self.$el.append(markup);
     _.each(self.subViews, function(type){
       self.$el.append(type.render().el);
     });
