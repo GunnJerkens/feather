@@ -58,7 +58,7 @@
     if (CurrentUser.get('roles').indexOf('admin') > -1) {
       fieldsEditable = true;
     } else {
-      fieldsEditable = ['status', 'price']; // TODO: add field property to set editability by non-admin users
+      fieldsEditable = ['status', 'price', 'publishDate']; // TODO: add field property to set editability by non-admin users
     }
     markup = '';
     _.each(item, function(field){
