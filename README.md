@@ -63,10 +63,9 @@ $('form.item').each(function(i, obj) {
 
   $(this).find('option[value="available"]').prop('selected', true);
 
-});
 
-$('button.submit').each(function(i, obj) {
-  $(this).click();
+  $(this).find('button.submit').click();
+
 });
 
 ```
