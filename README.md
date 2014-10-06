@@ -30,6 +30,47 @@ want to use a different database name, you'll also need to edit `app.js`.
 You can edit the CMS functionality in `_attachments`. Feather uses backbone.js.
 You can also set up custom views to use as API endpoints in `app.js`.
 
+### Quick load data
+
+Example data where you have fields of lot, plan, elevation, reverse, x and y.
+
+This is what you could run in the console if you have same 100+ sites to fill in based off your generated data from the site map plotter.
+
+```
+var sites = [
+    {"lot":"imaginary-1","plan":1,"elevation":"A","reverse":true,"x":669,"y":367},
+    {"lot":"imaginary-2","plan":3,"elevation":"C","reverse":false,"x":668,"y":400},
+    {"lot":"imaginary-3","plan":2,"elevation":"A","reverse":true,"x":668,"y":434},
+    {"lot":"imaginary-4","plan":3,"elevation":"A","reverse":true,"x":666,"y":465},
+    {"lot":"imaginary-5","plan":2,"elevation":"C","reverse":false,"x":670,"y":499},
+];
+
+for(var i = 0; i < sites.length; i++) {
+  $('#addItem').click();
+}
+
+$('form.item').each(function(i, obj) {
+
+  $(this).find('input[name="lot"]').attr('value', sites[i]['lot']);
+  $(this).find('input[name="plan"]').attr('value', sites[i]['plan']);
+  $(this).find('input[name="x"]').attr('value', sites[i]['x']);
+  $(this).find('input[name="y"]').attr('value', sites[i]['y']);
+  $(this).find('input[name="elevation"]').attr('value', sites[i]['elevation']);
+
+  if(sites[i]['reverse']) {
+    $(this).find('input[name="reverse"]').prop('checked', true);
+  }
+
+  $(this).find('option[value="available"]').prop('selected', true);
+
+});
+
+$('button.submit').each(function(i, obj) {
+  $(this).click();
+});
+
+```
+
 ###License
 
 MIT
