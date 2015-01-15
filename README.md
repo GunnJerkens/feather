@@ -1,5 +1,7 @@
 ## Feather - A micro-CMS
 
+**As of 01/15/15 this project is deprecated in favor of [Plumage](https://github.com/Gunnjerkens/plumage)**
+
 Feather is an example of a Couchapp, and can be used to create JSON endpoints
 for all sorts of data.
 
